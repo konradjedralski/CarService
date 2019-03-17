@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="pl-PL">
+
+<head>
+    <title>Spalanie</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
+    <script type="text/javascript" src="http://easyautocomplete.com/dist/jquery.easy-autocomplete.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="/js/date.js"></script>
+    <script type="text/javascript" src="/js/navbar.js"></script>
+    <script type="text/javascript" src="/js/combustion.js"></script>
+    <script type="text/javascript" src="/js/chart.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="http://easyautocomplete.com/dist/easy-autocomplete.themes.min.css"/>
+    <link rel="stylesheet" href="http://easyautocomplete.com/dist/easy-autocomplete.min.css"/>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/combustion.css"/>
+</head>
+
+<body onload="startTime()">
+<div class="header flex">
+    <div class="title">
+        <a th:href="@{'/'}"><img src="/img/logo.png" class="img-responsive" alt="CarService"/></a>
+    </div>
+    <form class="search-area" action="#" th:action="@{/account/search}" th:object="${search}">
+        <div class="flex">
+            <input name="search" id="search" type="text" class="form-control" placeholder="Znajdź użytkownika..."/>
+            <button type="submit" class="btn btn-primary" onclick="this.blur()"><i class="fas fa-search"></i> Search</button>
+        </div>
+        <div th:if="${searchMessage} == 1" class="alert alert-danger message">
+            <a href="#" class="close" data-dismiss="alert">&times;</a>
+            <strong>Błąd!</strong> Użytkownik o podanej nazwie nie istnieje.
+        </div>
+    </form>
+    <div class="greeting">
+        <i class="fas fa-user"></i> <a th:href="@{'/account'}" th:text="${username}"></a>
+    </div>
+</div>
+
+<nav id="navbar" class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle nav-btn" data-toggle="collapse" onclick="this.blur()" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li><a th:href="@{'/'}">Strona główna</a></li>
+                <li class="current"><a th:href="@{'/combustion'}">Spalanie</a></li>
+                <li><a th:href="@{'/account'}">Konto</a></li>
+                <li th:if="${admin} == 1"><a th:href="@{'/admin'}">Administrator</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a th:href="@{'/logout'}"><i class="fas fa-power-off"></i> Wyloguj</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="col-md-7">
+    <div>
+        <table class="table table-fixed">
+            <thead>
+            <tr>
+                <th class="col-xs-2">Data tankowania</th>
+                <th class="col-xs-2">Zatankowane paliwo [l]</th>
+                <th class="col-xs-2">Przejechane kilometry</th>
+                <th class="col-xs-2">Cena paliwa [l]</th>
+                <th class="col-xs-2">Spalanie na 100 km</th>
+                <th class="col-xs-2">Koszt tankowania</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="combustionList" th:each="combustionList : ${combustionList}">
+                <td class="col-xs-2"><span th:text="${combustionList.getDate()}"></span></td>
+                <td class="col-xs-2"><span th:text="${combustionList.getFuelLitres()}"></span></td>
+                <td class="col-xs-2"><span th:text="${combustionList.getKilometersTraveled()}"></span></td>
+                <td class="col-xs-2"><span th:text="${combustionList.getLiterPrice()}"></span></td>
+                <td class="col-xs-2"><span th:text="${combustionList.getCombustionValue()}"></span></td>
+                <td class="col-xs-2"><span th:text="${combustionList.getRefuelingPrice()} + ' zł'"></span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <form th:action="@{'/combustion/delete-combustion'}" method="post" class="form-horizontal" role="form">
+            <div class="form-group col-md-12">
+                <label class="col-md-3 control-label edit-text">Data tankowania:</label>
+                <div class="col-md-8">
+                    <input name="delete-combustion-date" class="form-control" type="date" title="Wpisz datę tankowania w formacie rrrr-mm-dd." required="true"/>
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                <label class="col-md-3 control-label"></label>
+                <div class="col-md-8">
+                    <input id="submit-delete-combustion" type="submit" class="form-control btn btn-primary btn-page col-md-3" value="Usuń tankowanie" onclick="this.blur()"/>
+                    <br/><br/>
+                    <a role="button" th:href="@{'/combustion'}" class=" form-control btn btn-primary btn-page col-md-3" onclick="this.blur()"> Anuluj</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="col-md-5">
+    <div id="linechart_material" class="chart"></div>
+</div>
+
+<footer>
+    <span class="date" id="txt"></span>
+    <span class="author">Copyright &copy; Konrad Jędralski</span>
+</footer>
+</body>
+</html>

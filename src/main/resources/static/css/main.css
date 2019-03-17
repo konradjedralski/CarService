@@ -1,0 +1,49 @@
+.row {
+    margin-bottom: 35px;
+}
+
+.main-title {
+    font-size: calc(12px + 1vw);
+    font-weight: bold;
+    margin-left: 30px;
+    color: #aeaeae;
+}
+
+.main-field {
+    font-size: calc(12px + 1vw);
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.main-text {
+    font-size: calc(12px + 1vw);
+    color: #f2f2f2;
+    margin-left: 30px;
+}
+
+.edit-button {
+    margin-top: 10px;
+    margin-left: 30px;
+    width: 200px;
+}
+
+.edit-text {
+    font-size: calc(11px + 0.3vw);
+    color: #aeaeae;
+}
+
+.main-photo-title {
+    font-size: calc(12px + 1vw);
+    font-weight: bold;
+    color: #aeaeae;
+    text-decoration: underline;
+    text-align: center;
+}
+
+.photo-btn{
+    margin-left: 0px !important;
+}
+
+.btn-change{
+    margin-left: -25px !important;
+}

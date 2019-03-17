@@ -1,0 +1,79 @@
+.table-fixed {
+    width: 100%;
+    margin-top: 20px;
+    background-color: #333;
+    color: #aeaeae;
+}
+
+.table-fixed tbody {
+    height: 250px;
+    overflow-y: auto;
+    width: 100%;
+}
+
+.table-fixed thead, .table-fixed tbody, .table-fixed tr, .table-fixed td, .table-fixed th {
+    display: block;
+}
+
+.table-fixed tbody td {
+    float: left;
+    text-align: center;
+}
+
+.table-fixed thead tr th {
+    float: left;
+    text-align: center;
+    background-color: #0d0d0d;
+    border-color: #0d0d0d;
+}
+
+.row {
+    margin-bottom: 35px;
+}
+
+.main-title {
+    font-size: calc(12px + 1vw);
+    font-weight: bold;
+    margin-left: 30px;
+    color: #aeaeae;
+}
+
+.main-field {
+    font-size: calc(12px + 1vw);
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.main-text {
+    font-size: calc(12px + 1vw);
+    color: #f2f2f2;
+    margin-left: 30px;
+}
+
+.edit-button {
+    margin-top: 10px;
+    margin-left: 30px;
+    width: 200px;
+}
+
+.edit-text {
+    font-size: calc(11px + 0.3vw);
+    color: #aeaeae;
+}
+
+.text-combustion {
+    float: right;
+    margin-top: 10px;
+    margin-right: 25px;
+    font-size: calc(1px + 1vw);
+    font-weight: bold;
+    color: #aeaeae;
+}
+
+.chart{
+    margin-top: 20px;
+    margin-left: 0px;
+    margin-right: 0px;
+    width: 775px;
+    hight: 450px;
+}

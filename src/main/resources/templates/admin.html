@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="pl-PL">
+
+<head>
+    <title>Administrator</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
+    <script type="text/javascript" src="http://easyautocomplete.com/dist/jquery.easy-autocomplete.min.js"></script>
+    <script type="text/javascript" src="/js/date.js"></script>
+    <script type="text/javascript" src="/js/navbar.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="http://easyautocomplete.com/dist/easy-autocomplete.themes.min.css"/>
+    <link rel="stylesheet" href="http://easyautocomplete.com/dist/easy-autocomplete.min.css"/>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/account.css"/>
+    <link rel="stylesheet" href="/css/edit.css"/>
+</head>
+
+<body onload="startTime()">
+<div class="header flex">
+    <div class="title">
+        <a th:href="@{'/'}"><img src="/img/logo.png" class="img-responsive" alt="CarService"/></a>
+    </div>
+    <form class="search-area" action="#" th:action="@{/account/search}" th:object="${search}">
+        <div class="flex">
+            <input name="search" id="search" type="text" class="form-control" placeholder="Znajdź użytkownika..."/>
+            <button type="submit" class="btn btn-primary" onclick="this.blur()"><i class="fas fa-search"></i> Search</button>
+        </div>
+        <div th:if="${searchMessage} == 1" class="alert alert-danger message">
+            <a href="#" class="close" data-dismiss="alert">&times;</a>
+            <strong>Błąd!</strong> Użytkownik o podanej nazwie nie istnieje.
+        </div>
+    </form>
+    <div class="greeting">
+        <i class="fas fa-user"></i> <a th:href="@{'/account'}" th:text="${username}"></a>
+    </div>
+</div>
+
+<nav id="navbar" class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle nav-btn" data-toggle="collapse" onclick="this.blur()" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li><a th:href="@{'/'}">Strona główna</a></li>
+                <li><a th:href="@{'/combustion'}">Spalanie</a></li>
+                <li><a th:href="@{'/account'}">Konto</a></li>
+                <li th:if="${admin} == 1" class="current"><a th:href="@{'/admin'}">Administrator</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a th:href="@{'/logout'}"><i class="fas fa-power-off"></i> Wyloguj</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="col-md-6">
+    <div class="col-md-12">
+        <div th:if="${message} == 1" class="alert alert-success message">
+            <a href="#" class="close" data-dismiss="alert">&times;</a>
+            <strong>Sukces!</strong> Użytkownik został usunięty.
+        </div>
+        <div th:if="${message} == 2" class="alert alert-success message">
+            <a href="#" class="close" data-dismiss="alert">&times;</a>
+            <strong>Sukces!</strong> Samochód został dodany.
+        </div>
+    </div>
+    <div class="row">
+        <p class="account-title">Usunięcie użytkownika</p>
+        <form th:action="@{'/admin/delete-user'}" method="post" class="form-horizontal" role="form">
+            <div class="form-group col-md-12">
+                <label class="col-md-3 control-label edit-text">Nazwa użytkownika:</label>
+                <div class="col-md-8">
+                    <input id="delete-user" name="delete-user" class="form-control" type="text" pattern="[a-zA-Z0-9]{3,}"
+                           title="Nazwa użytkownika musi zawierać minimum 3 znaki (tylko litery i cyfry)."
+                           required="true"/>
+                    <div th:if="${message} == 3" class="alert alert-danger">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>Błąd!</strong> Użytkownik o takiej nazwie nie istnieje.
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                <label class="col-md-3 control-label"></label>
+                <div class="col-md-8">
+                    <input id="submit-delete-user" type="submit" class="form-control btn btn-primary btn-page col-md-3" value="Usuń użytkownika" onclick="this.blur()"/>
+                </div>
+            </div>
+        </form>
+        <p class="account-title">Dodanie samochodu</p>
+        <form th:action="@{'/admin/add-car'}" method="post" class="form-horizontal" role="form">
+            <div class="form-group col-md-12">
+                <label class="col-md-3 control-label edit-text">Rok produkcji:</label>
+                <div class="col-md-8">
+                    <input id="year" name="year" class="form-control" type="text" pattern="^\d{4}$" title="Wprowadź datę produkcji samochodu" required="true"/>
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                <label class="col-md-3 control-label edit-text">Producent:</label>
+                <div class="col-md-8">
+                    <input id="make" name="make" class="form-control" type="text" title="Wprowadź nazwę producenta samochodu" required="true"/>
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                <label class="col-md-3 control-label edit-text">Model:</label>
+                <div class="col-md-8">
+                    <input id="model" name="model" class="form-control" type="text" title="Wprowadź nazwę modelu samochodu." required="true"/>
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                <label class="col-md-3 control-label"></label>
+                <div class="col-md-8">
+                    <div th:if="${message} == 4" class="alert alert-danger">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>Błąd!</strong> Taki samochód już istnieje.
+                    </div>
+                    <input id="submit-add-car" type="submit" class="form-control btn btn-primary btn-page col-md-3" value="Dodaj samochód" onclick="this.blur()"/>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<footer>
+    <span class="date" id="txt"></span>
+    <span class="author">Copyright &copy; Konrad Jędralski</span>
+</footer>
+</body>
+</html>

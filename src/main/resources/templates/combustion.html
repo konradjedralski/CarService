@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="pl-PL">
+
+<head>
+    <title>Spalanie</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
+    <script type="text/javascript" src="http://easyautocomplete.com/dist/jquery.easy-autocomplete.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="/js/date.js"></script>
+    <script type="text/javascript" src="/js/navbar.js"></script>
+    <script type="text/javascript" src="/js/combustion.js"></script>
+    <script type="text/javascript" src="/js/chart.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="http://easyautocomplete.com/dist/easy-autocomplete.themes.min.css"/>
+    <link rel="stylesheet" href="http://easyautocomplete.com/dist/easy-autocomplete.min.css"/>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/combustion.css"/>
+</head>
+
+<body onload="startTime()">
+<div class="header flex">
+    <div class="title">
+        <a th:href="@{'/'}"><img src="/img/logo.png" class="img-responsive" alt="CarService"/></a>
+    </div>
+    <form class="search-area" action="#" th:action="@{/account/search}" th:object="${search}">
+        <div class="flex">
+            <input name="search" id="search" type="text" class="form-control" placeholder="Znajdź użytkownika..."/>
+            <button type="submit" class="btn btn-primary" onclick="this.blur()"><i class="fas fa-search"></i> Search</button>
+        </div>
+        <div th:if="${searchMessage} == 1" class="alert alert-danger message">
+            <a href="#" class="close" data-dismiss="alert">&times;</a>
+            <strong>Błąd!</strong> Użytkownik o podanej nazwie nie istnieje.
+        </div>
+    </form>
+    <div class="greeting">
+        <i class="fas fa-user"></i> <a th:href="@{'/account'}" th:text="${username}"></a>
+    </div>
+</div>
+
+<nav id="navbar" class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle nav-btn" data-toggle="collapse" onclick="this.blur()" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li><a th:href="@{'/'}">Strona główna</a></li>
+                <li class="current"><a th:href="@{'/combustion'}">Spalanie</a></li>
+                <li><a th:href="@{'/account'}">Konto</a></li>
+                <li th:if="${admin} == 1"><a th:href="@{'/admin'}">Administrator</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a th:href="@{'/logout'}"><i class="fas fa-power-off"></i> Wyloguj</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="col-xs-12">
+    <div th:if="${message} == 1" class="alert alert-success message col-xs-5">
+        <a href="#" class="close" data-dismiss="alert">&times;</a>
+        <strong>Sukces!</strong> Tankowanie zostało dodane.
+    </div>
+    <div th:if="${message} == 2" class="alert alert-success message col-xs-5">
+        <a href="#" class="close" data-dismiss="alert">&times;</a>
+        <strong>Sukces!</strong> Tankowanie zostało usunięte.
+    </div>
+</div>
+<div class="col-md-7">
+    <div th:if="${checkUserCombustion} == 1">
+        <table class="table table-fixed">
+            <thead>
+            <tr>
+                <th class="col-xs-2">Data tankowania</th>
+                <th class="col-xs-2">Zatankowane paliwo [l]</th>
+                <th class="col-xs-2">Przejechane kilometry</th>
+                <th class="col-xs-2">Cena paliwa [l]</th>
+                <th class="col-xs-2">Spalanie na 100 km</th>
+                <th class="col-xs-2">Koszt tankowania</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="combustionList" th:each="combustionList : ${combustionList}">
+                <td class="col-xs-2"><span th:text="${combustionList.getDate()}"></span></td>
+                <td class="col-xs-2"><span th:text="${combustionList.getFuelLitres()}"></span></td>
+                <td class="col-xs-2"><span th:text="${combustionList.getKilometersTraveled()}"></span></td>
+                <td class="col-xs-2"><span th:text="${combustionList.getLiterPrice()}"></span></td>
+                <td class="col-xs-2"><span th:text="${combustionList.getCombustionValue()}"></span></td>
+                <td class="col-xs-2"><span th:text="${combustionList.getRefuelingPrice()} + ' zł'"></span></td>
+            </tr>
+            </tbody>
+        </table>
+        <a role="button" th:href="@{'/combustion/add-combustion'}" class="btn btn-primary edit-button btn-page" onclick="this.blur()"><i class="fas fa-plus"></i> Dodaj tankowanie</a>
+        <a role="button" th:href="@{'/combustion/delete-combustion'}" class="btn btn-primary edit-button btn-page" onclick="this.blur()"><i class="far fa-trash-alt"></i> Usuń tankowanie</a>
+        <p class="text-combustion">Sumaryczne spalanie: <span th:text="${summaryCombustion}"></span> l/100km.</p>
+    </div>
+    <div th:if="${checkUserCombustion} == 0">
+        <p class="main-title main-field">Nie dodałeś jeszcze żadnego tankowania.</p>
+        <a role="button" th:href="@{'/combustion/add-combustion'}" class="btn btn-primary edit-button btn-page" onclick="this.blur()"><i class="fas fa-plus"></i> Dodaj tankowanie</a>
+    </div>
+</div>
+<div th:if="${checkUserCombustion} == 1" class="col-md-5">
+    <div id="linechart_material" class="chart"></div>
+</div>
+<footer>
+    <span class="date" id="txt"></span>
+    <span class="author">Copyright &copy; Konrad Jędralski</span>
+</footer>
+</body>
+</html>

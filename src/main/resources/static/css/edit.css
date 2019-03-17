@@ -1,0 +1,8 @@
+.row {
+  margin-bottom: 35px;
+}
+
+.edit-text {
+    font-size: calc(11px + 0.3vw);
+    color: #aeaeae;
+}

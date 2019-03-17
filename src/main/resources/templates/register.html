@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="pl-PL">
+<head>
+    <title>Rejestracja</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/login.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/login.css"/>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-login">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <a th:href="@{'/login'}" id="login-form-link">Logowanie</a>
+                        </div>
+                        <div class="col-xs-6">
+                            <a th:href="@{'/login/register'}" class="active" id="register-form-link">Rejestracja</a>
+                        </div>
+                    </div>
+                    <hr/>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <form id="register-form" th:action="@{'/login/register'}" th:object="${user}" method="post" role="form" style="display: block">
+                                <div class="form-group">
+                                    <input type="text" name="register-username" id="register-username" tabindex="1" class="form-control" placeholder="Nazwa użytkownika" value=""
+                                           th:field="*{username}" pattern="[a-zA-Z0-9]{3,}" title="Nazwa użytkownika musi zawierać minimum 3 znaki (tylko litery i cyfry)." required="true"/>
+                                    <div th:if="${message} == 1" class="alert alert-danger">
+                                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                        <strong>Błąd!</strong> Użytkownik o takiej nazwie już istnieje.
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="Email" value="" th:field="*{email}"
+                                           title="Wprowadź adres email." required="true"/>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="register-first-name" id="register-first-name" tabindex="1" class="form-control" placeholder="Imię" value=""
+                                           th:field="*{firstName}" title="Pole imię nie jest wymagane."/>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="register-last-name" id="register-last-name" tabindex="1" class="form-control" placeholder="Nazwisko" value=""
+                                           th:field="*{lastName}" title="Pole nazwisko nie jest wymagane."/>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" name="register-password" id="register-password" tabindex="2" class="form-control" placeholder="Hasło" th:field="*{password}"
+                                           pattern="[a-zA-Z0-9]{3,}" title="Hasło musi zawierać minimum 3 znaki (tylko litery i cyfry)." required="true"/>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" name="register-confirm-password" id="register-confirm-password" tabindex="2" class="form-control"
+                                           placeholder="Powtórz hasło" title="Powtórz hasło." required="true"/>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-sm-offset-3">
+                                            <input type="submit" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" onclick="this.blur()"
+                                                   value="Zarejestruj"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
